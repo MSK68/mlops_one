@@ -14,6 +14,8 @@ from sklearn.model_selection import train_test_split
 
 app = FastAPI()
 
+templates = Jinja2Templates(directory="templates")
+
 
 # Читаем данные
 data = pd.read_csv(r'dataset/diamonds-dataset.csv')
@@ -68,7 +70,10 @@ def predict(data: DiamondInput):
 
 
 # Определяем роут для проверки работоспособности
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
+async def read_root(request: Request):
+    return templates.TemplateResponse("home.html", {"request": request})
+"""@app.get("/")
 def read_root():
     return {"Для предсказания модели необходимо отправить POST запрос со следующим содержимым":
                 {"carat": 0.0,
@@ -81,7 +86,7 @@ def read_root():
                  "y": 0.0,
                  "z": 0.0},
             "Подробнее о модели можно узнать по адресу": "/docs"
-            }
+            }"""
 
 # Определяем роут для проверки качества модели на тестовых данных
 @app.get("/score")

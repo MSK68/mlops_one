@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diamond Price Prediction</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <form id="prediction-form">
+        <label for="carat">Carat:</label><br>
+        <input type="text" id="carat" name="carat"><br>
+        <label for="cut">Cut:</label><br>
+        <select id="cut" name="cut">
+            <option value="Fair">Fair</option>
+            <option value="Good">Good</option>
+            <option value="Ideal">Ideal</option>
+            <option value="Premium">Premium</option>
+            <option value="Very Good">Very Good</option>
+        </select><br>
+        <label for="color">Color:</label><br>
+        <select id="color" name="color">
+            <option value="D">D</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="G">G</option>
+            <option value="H">H</option>
+            <option value="I">I</option>
+        </select><br>
+        <label for="clarity">Clarity:</label><br>
+        <select id="clarity" name="clarity">
+            <option value="I1">I1</option>
+            <option value="IF">IF</option>
+            <option value="SI1">SI1</option>
+            <option value="SI2">SI2</option>
+            <option value="VS1">VS1</option>
+            <option value="VS2">VS2</option>
+            <option value="VVS1">VVS1</option>
+            <option value="VVS2">VVS2</option>
+        </select><br>
+        <label for="depth">Depth:</label><br>
+        <input type="text" id="depth" name="depth"><br>
+        <label for="table">Table:</label><br>
+        <input type="text" id="table" name="table"><br>
+        <label for="x">X:</label><br>
+        <input type="text" id="x" name="x"><br>
+        <label for="y">Y:</label><br>
+        <input type="text" id="y" name="y"><br>
+        <label for="z">Z:</label><br>
+        <input type="text" id="z" name="z"><br>
+        <input type="submit" value="Submit">
+    </form>
+    <div id="prediction-result"></div>
+
+    <script>
+        $("#prediction-form").submit(function(event) {
+            event.preventDefault();
+            var form_data = $(this).serializeArray().reduce(function(a, x) { a[x.name] = x.value; return a; }, {});
+            $.ajax({
+                type: "POST",
+                url: "/predict",
+                data: JSON.stringify(form_data),
+                contentType: "application/json",
+                success: function(response) {
+                    $("#prediction-result").html("Prediction: " + response.prediction);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
