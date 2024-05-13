@@ -5,4 +5,4 @@ src
 docker-compose.yaml
 Dockerfile
 .idea
-
+__pycache__
