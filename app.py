@@ -14,9 +14,9 @@ from sklearn.model_selection import train_test_split
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/html/static", StaticFiles(directory="html/static"), name="static")
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="html/templates")
 
 # Читаем данные
 data = pd.read_csv(r'dataset/diamonds-dataset.csv')
