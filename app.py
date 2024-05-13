@@ -5,17 +5,18 @@ import pandas as pd
 from catboost import CatBoostRegressor
 
 from fastapi import FastAPI, Request
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from pydantic import BaseModel
 from sklearn.model_selection import train_test_split
 
-
 app = FastAPI()
 
-templates = Jinja2Templates(directory="templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
+templates = Jinja2Templates(directory="templates")
 
 # Читаем данные
 data = pd.read_csv(r'dataset/diamonds-dataset.csv')
@@ -66,27 +67,14 @@ def predict(data: DiamondInput):
     data = data.dict()
     data = pd.DataFrame(data, index=[0])
     prediction = model.predict(data)
-    return {'prediction': prediction[0]}
+    return {'prediction': str(round(prediction[0])) + ' USD'}
 
 
 # Определяем роут для проверки работоспособности
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse("home.html", {"request": request})
-"""@app.get("/")
-def read_root():
-    return {"Для предсказания модели необходимо отправить POST запрос со следующим содержимым":
-                {"carat": 0.0,
-                 "cut": "Ideal",
-                 "color": "E",
-                 "clarity": "SI1",
-                 "depth": 0.0,
-                 "table": 0.0,
-                 "x": 0.0,
-                 "y": 0.0,
-                 "z": 0.0},
-            "Подробнее о модели можно узнать по адресу": "/docs"
-            }"""
+
 
 # Определяем роут для проверки качества модели на тестовых данных
 @app.get("/score")
