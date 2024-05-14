@@ -5,7 +5,7 @@ FROM python:3.8-slim-buster
 WORKDIR /app
 
 # Add current directory code to /app in container
-ADD . /app/
+COPY . /app/
 
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
