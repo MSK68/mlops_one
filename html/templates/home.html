@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diamond Price Prediction</title>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+    body {
+        background-image: url('/html/static/brilliance.png');
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        background-size: cover;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    #prediction-form {
+        background-color: rgba(128, 128, 128, 0.3); /* semi-transparent gray */
+        padding: 20px;
+        border-radius: 10px;
+    }
+    </style>
+</head>
+<body>
+    <form id="prediction-form">
+        <label for="carat" title="Вес бриллианта в каратах">Carat:</label><br>
+        <input type="text" id="carat" name="carat" title="Введите вес бриллианта в каратах"><br>
+        <label for="cut" title="Качество огранки бриллианта">Cut:</label><br>
+        <select id="cut" name="cut" title="Качество огранки бриллианта">
+            <option value="Fair">Fair</option>
+            <option value="Good">Good</option>
+            <option value="Ideal">Ideal</option>
+            <option value="Premium">Premium</option>
+            <option value="Very Good">Very Good</option>
+        </select><br>
+        <label for="color" title="Цвет ромба бриллианта от J (худший) до D (лучший)">Color:</label><br>
+        <select id="color" name="color" title="Цвет ромба бриллианта от J (худший) до D (лучший)">
+            <option value="D">D</option>
+            <option value="E">E</option>
+            <option value="F">F</option>
+            <option value="G">G</option>
+            <option value="H">H</option>
+            <option value="I">I</option>
+        </select><br>
+        <label for="clarity" title="Чистота бриллианта от I1 (худшая), SI2, SI1, VS2, VS1, VVS2, VVS1 до  IF (лучшая)">Clarity:</label><br>
+        <select id="clarity" name="clarity" title="Чистота бриллианта от I1 (худшая), SI2, SI1, VS2, VS1, VVS2, VVS1 до  IF (лучшая)">
+            <option value="I1">I1</option>
+            <option value="IF">IF</option>
+            <option value="SI1">SI1</option>
+            <option value="SI2">SI2</option>
+            <option value="VS1">VS1</option>
+            <option value="VS2">VS2</option>
+            <option value="VVS1">VVS1</option>
+            <option value="VVS2">VVS2</option>
+        </select><br>
+        <label for="depth" title="Глубина в процентах">Depth:</label><br>
+        <input type="text" id="depth" name="depth" title="Глубина в процентах"><br>
+        <label for="table" title="Ширина стола от вершины ромба относительно самого широкого места">Table:</label><br>
+        <input type="text" id="table" name="table" title="Ширина стола от вершины ромба относительно самого широкого места"><br>
+        <label for="x" title="Длина в мм">X:</label><br>
+        <input type="text" id="x" name="x" title="Длина в мм"><br>
+        <label for="y" title="Ширина в мм">Y:</label><br>
+        <input type="text" id="y" name="y" title="Ширина в мм"><br>
+        <label for="z" title="Глубина в мм">Z:</label><br>
+        <input type="text" id="z" name="z" title="Глубина в мм"><br>
+        <input type="submit" value="Submit">
+    </form>
+    <div id="prediction-result"></div>
+
+    <script>
+        $("#prediction-form").submit(function(event) {
+            event.preventDefault();
+            var form_data = $(this).serializeArray().reduce(function(a, x) { a[x.name] = x.value; return a; }, {});
+            $.ajax({
+                type: "POST",
+                url: "/predict",
+                data: JSON.stringify(form_data),
+                contentType: "application/json",
+                success: function(response) {
+                    $("#prediction-result").html("Predicted price: " + response.prediction);
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
