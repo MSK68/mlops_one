@@ -2,8 +2,7 @@ app/HW3(II)_Dolgov.ipynb
 app
 catboost_info
 src
-docker-compose.yaml
-Dockerfile
+model/diamonds_model.pkl
 .idea
 
 # Byte-compiled / optimized / DLL files
