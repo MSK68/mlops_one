@@ -6,6 +6,7 @@ pipeline {
             steps {
                 sh 'ls -la'
                 echo 'Building...'
+                sh 'cat README.md'
             }
         }
         stage('Test') {
@@ -16,6 +17,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo 'Deploying...'
+                echo 'Docker build...'
             }
         }
     }
