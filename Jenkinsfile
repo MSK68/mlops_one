@@ -4,6 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
+                ls -la
                 echo 'Building...'
             }
         }
