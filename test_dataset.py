@@ -4,7 +4,7 @@ import pytest
 # Загрузка данных из CSV
 @pytest.fixture(scope='module')
 def data():
-    return pd.read_csv('diamonds-dataset.csv')
+    return pd.read_csv('dataset/diamonds-dataset.csv')
 
 # Тест 1: Проверка на наличие пропущенных значений
 def test_no_missing_values(data):
