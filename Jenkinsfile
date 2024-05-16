@@ -6,6 +6,7 @@ pipeline {
             steps {
                 echo 'Setup environment...'
                 // Создаем и активируем виртуальное окружение
+                sh 'apt install python3.10-venv'
                 sh 'mkdir venv'
                 sh 'python3 -m venv venv'
                 sh '. venv/bin/activate'
