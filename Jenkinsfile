@@ -2,6 +2,12 @@ pipeline {
     agent any
 
     stages {
+        stage('Clean Workspace') {
+            steps {
+                echo 'Cleaning workspace...'
+                deleteDir()
+            }
+        }
         stage('Setup') {
             steps {
                 echo 'Setup environment...'
@@ -44,6 +50,11 @@ pipeline {
                 echo 'Deploying...'
                 echo 'Docker build...'
             }
+        }
+    }
+    post {
+        always {
+            cleanWs()
         }
     }
 }
