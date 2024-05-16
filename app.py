@@ -86,7 +86,7 @@ def predict(data: DiamondInput) -> dict:
     :param data: характеристики бриллианта в формате JSON
     :return: предсказанная цена бриллианта в формате JSON
     """
-    data = data.dict()
+    data = data.model_dump()
     data = pd.DataFrame(data, index=[0])
     prediction = model.predict(data)
     return {'prediction': str(round(prediction[0])) + ' USD'}
@@ -105,7 +105,7 @@ async def read_root(request: Request) -> HTMLResponse:
 
 # Определяем роут для проверки качества модели на тестовых данных
 @app.get("/score")
-def score() -> float:
+def get_score() -> float:
     """
     Функция для проверки качества модели на тестовых данных
     :return: качество модели на тестовых данных
