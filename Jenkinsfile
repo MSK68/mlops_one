@@ -8,6 +8,13 @@ pipeline {
                 deleteDir()
             }
         }
+        stage('Checkout') {
+            steps {
+                echo 'Checking out repository...'
+                // Извлечение кода из репозитория
+                checkout scm
+            }
+        }
         stage('Setup') {
             steps {
                 echo 'Setup environment...'
