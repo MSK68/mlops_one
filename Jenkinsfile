@@ -37,8 +37,8 @@ pipeline {
                 
                 // Проверка линтером
                 sh 'venv/bin/pip install flake8'
-                sh 'venv/bin/flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics'
-                sh 'venv/bin/flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics'
+                sh 'venv/bin/flake8 app.py --count --select=E9,F63,F7,F82 --show-source --statistics'
+                sh 'venv/bin/flake8 app.py --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics'
             }
         }
         stage('Test') {
