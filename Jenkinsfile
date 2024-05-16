@@ -16,7 +16,8 @@ pipeline {
             steps {
                 echo 'Testing...'
             }
-        stage('Data testing')
+        }
+        stage('Data testing') {
             steps {
                 echo 'Data testing...'
                 sh 'pip install pytest'
