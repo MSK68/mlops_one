@@ -18,6 +18,7 @@ pipeline {
                 
                 // Обновление pip
                 sh 'venv/bin/pip install --upgrade pip'
+                sh 'ls -la'
 
                 // Установка зависимостей
                 sh 'venv/bin/pip install -r requirements.txt'
