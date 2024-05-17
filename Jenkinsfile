@@ -54,6 +54,28 @@ pipeline {
                 sh 'venv/bin/pytest test_dataset.py'
             }
         }
+	stage('Docker Build') {
+            steps {
+                echo 'Building Docker image...'           
+
+                // Сборка Docker-образа
+                sh 'docker build -t msk68/diamond:0.0.1 .'
+            }
+	}
+	stage('Publish') {
+	    steps {
+		echo 'Publishing Docker-image in hub.docker.com...'
+		
+		// Docker login
+                withCredentials([string(credentialsId: 'dockerhub-credentials-id', variable: 'DOCKERHUB_PASSWORD')]) {
+                    sh 'echo $DOCKERHUB_PASSWORD | docker login -u msk68 --password-stdin'
+                }
+		
+		// Отправка Docker-образа в Docker Hub
+                sh 'docker push msk68/diamond:0.0.1'
+                echo 'Docker image pushed to Docker Hub.'    
+	    }
+        }
         stage('Deploy') {
             steps {
                 echo 'Deploying...'
