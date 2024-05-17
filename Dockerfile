@@ -8,10 +8,10 @@ WORKDIR /app
 COPY . /app/
 
 # Upgrade pip
-RUN python3 -m pip install --index-url=https://pypi.python.org/simple --trusted-host pypi.python.org --upgrade pip setuptools
+RUN python3 -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org pip setuptools
 
-# Install dependencies
-RUN python3 -m pip install --index-url=https://pypi.python.org/simple --trusted-host pypi.python.org -r requirements.txt
+# Install any needed packages specified in requirements.txt
+RUN python3 -m pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r requirements.txt
 
 # Run app.py when the container launches
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
