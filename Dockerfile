@@ -7,6 +7,9 @@ WORKDIR /app
 # Add current directory code to /app in container
 COPY . /app/
 
+# Upgrade pip
+RUN python3 -m pip install --upgrade pip setuptools
+
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
 
