@@ -49,7 +49,6 @@ pipeline {
         stage('Data testing') {
             steps {
                 echo 'Data testing...'
-                sh 'venv/bin/pip install pytest'
                 sh 'venv/bin/pytest test_dataset.py'
             }
         }
