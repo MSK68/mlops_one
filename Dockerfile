@@ -1,11 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim-bullseye
-
-# System upgrade
-RUN apt-get update && apt-get install -y \
-    openssl \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+FROM python:3.9-slim-buster
 
 # Set the working directory in the container to /app
 WORKDIR /app
