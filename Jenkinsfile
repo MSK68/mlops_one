@@ -44,6 +44,8 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
+
+		sh 'venv/bin/pytest —disable-warnings test_app.py'
             }
         }
         stage('Data testing') {
