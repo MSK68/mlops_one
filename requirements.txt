@@ -5,3 +5,4 @@ pydantic
 catboost
 fastapi
 uvicorn
+pytest
