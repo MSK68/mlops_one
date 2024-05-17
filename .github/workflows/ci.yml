@@ -51,11 +51,12 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-          pip install pytest
           pip install coverage
-      - name: Run tests
-        run: pytest test/test.py
+      - name: Run app tests
+        run: pytest --disable-warnings test_app.py
+      - name: Run data tests
+        run: pytest test_dataset.py
       - name: Run coverage
-        run: coverage run -m pytest test/test.py
+        run: coverage run -m pytest test_app.py
       - name: Tests report
         run: coverage report
