@@ -1,8 +1,6 @@
 # Use an official Python runtime as a parent image
 FROM python:3.9-slim-bullseye
 
-USER root
-
 RUN apt-get update && apt-get install -y \
     openssl \
     && apt-get clean \
