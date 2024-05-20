@@ -93,7 +93,7 @@ pipeline {
 			sh 'docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}'
 			sh 'docker stop diamond-predicting || true'
                         sh 'docker rm diamond-predicting || true'
-			sh 'sudo fuser -k 80/tcp || true'
+			sh 'fuser -k 80/tcp || true'
                         sh 'docker run -d --name diamond-predicting -p 80:8000 ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}'
                     }
 		}
