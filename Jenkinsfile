@@ -90,9 +90,10 @@ pipeline {
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: SSH_CREDENTIALS_ID, keyFileVariable: 'SSH_PRIVATE_KEY')]) {
                         sh 'ssh -i ${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no ${STAGE_SERVER}'
-                        sh 'docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}'
-                        sh 'docker stop diamond-predicting || true'
+			sh 'docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}'
+			sh 'docker stop diamond-predicting || true'
                         sh 'docker rm diamond-predicting || true'
+			sh 'sudo fuser -k 80/tcp || true'
                         sh 'docker run -d --name diamond-predicting -p 80:8000 ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}'
                     }
 		}
