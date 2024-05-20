@@ -88,13 +88,13 @@ pipeline {
             steps {
                 echo 'Deploying...'
                 script {
-                    sshagent([SSH_CREDENTIALS_ID]) {
+                    withCredentials([string(credentialsId: SSH_CREDENTIALS_ID, variable: 'SSH_PRIVATE_KEY')]) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no ${STAGE_SERVER} << EOF
-                        docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}'
-                        docker stop my_app || true
-                        docker rm my_app || true
-                        docker run -d --name my_app -p 80:8000 ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}'
+                        ssh -i ${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no ${STAGE_SERVER} << EOF
+                        docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}
+                        docker stop diamond-predicting || true
+                        docker rm diamond-predicting || true
+                        docker run -d --name diamond-predicting -p 80:8000 ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}
                         EOF
                         """
                     }
