@@ -1,6 +1,15 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE = 'diamond-predicting'
+	DOCKER_TAG = '1.0.0'
+        DOCKER_REGISTRY = 'msk68'
+        DOCKER_CREDENTIALS_ID = 'your-docker-credentials-id'
+        SSH_CREDENTIALS_ID = 'your-ssh-credentials-id'
+        STAGE_SERVER = 'savirm@178.154.226.39'
+    }
+
     stages {
         stage('Clean Workspace') {
             steps {
@@ -72,14 +81,24 @@ pipeline {
                 }
 		
 		// Отправка Docker-образа в Docker Hub
-                sh 'docker push msk68/diamond:0.0.1'
+                sh 'docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}':${DOCKER_TAG}
                 echo 'Docker image pushed to Docker Hub.'    
 	    }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying...'
-                echo 'Docker build...'
+                script {
+                    sshagent([SSH_CREDENTIALS_ID]) {
+                        sh """
+                        ssh -o StrictHostKeyChecking=no ${STAGE_SERVER} << EOF
+                        docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}':${DOCKER_TAG}
+                        docker stop my_app || true
+                        docker rm my_app || true
+                        docker run -d --name my_app -p 80:8000 ${DOCKER_REGISTRY}/${DOCKER_IMAGE}':${DOCKER_TAG}
+                        EOF
+                        """
+                    }
             }
         }
     }
