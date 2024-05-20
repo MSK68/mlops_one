@@ -67,7 +67,7 @@ pipeline {
                 echo 'Building Docker image...'           
 
                 // Сборка Docker-образа
-                sh 'docker build -t msk68/diamond:0.0.1 .'
+                sh 'docker build -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG} .'
             }
 	}
 	stage('Publish') {
@@ -80,7 +80,7 @@ pipeline {
                 }
 		
 		// Отправка Docker-образа в Docker Hub
-                sh 'docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}':${DOCKER_TAG}
+                sh 'docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}'
                 echo 'Docker image pushed to Docker Hub.'    
 	    }
         }
@@ -91,10 +91,10 @@ pipeline {
                     sshagent([SSH_CREDENTIALS_ID]) {
                         sh """
                         ssh -o StrictHostKeyChecking=no ${STAGE_SERVER} << EOF
-                        docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}':${DOCKER_TAG}
+                        docker pull ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}'
                         docker stop my_app || true
                         docker rm my_app || true
-                        docker run -d --name my_app -p 80:8000 ${DOCKER_REGISTRY}/${DOCKER_IMAGE}':${DOCKER_TAG}
+                        docker run -d --name my_app -p 80:8000 ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}'
                         EOF
                         """
                     }
