@@ -1,11 +1,7 @@
-version: '3.8'
-
+version: '3'
 services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  diamond-predicting:
+    image: msk68/diamond-predicting:1.0.0
+    container_name: diamond-predicting
     ports:
-      - 8000:8000
-    volumes:
-      - .:/app
+      - "80:8000"
