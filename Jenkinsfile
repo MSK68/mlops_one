@@ -93,6 +93,7 @@ pipeline {
                         sh 'ssh -i ${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no ${STAGE_SERVER}'
 			sh 'cd /home/savirm/diamond'
 			sh 'docker compose down'
+			sh 'fuser -k 80/tcp || true'
                         sh 'docker compose up -d'
                     }
 		}
