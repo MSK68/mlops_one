@@ -5,8 +5,7 @@ pipeline {
         DOCKER_IMAGE = 'diamond-predicting'
 	DOCKER_TAG = '1.0.0'
         DOCKER_REGISTRY = 'msk68'
-        DOCKER_CREDENTIALS_ID = 'your-docker-credentials-id'
-        SSH_CREDENTIALS_ID = 'your-ssh-credentials-id'
+        SSH_CREDENTIALS_ID = 'stage-ssh-credentials-id'
         STAGE_SERVER = 'savirm@178.154.226.39'
     }
 
@@ -99,6 +98,7 @@ pipeline {
                         EOF
                         """
                     }
+		}
             }
         }
     }
