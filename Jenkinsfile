@@ -89,7 +89,7 @@ pipeline {
                 echo 'Deploying...'
                 script {
                     withCredentials([sshUserPrivateKey(credentialsId: SSH_CREDENTIALS_ID, keyFileVariable: 'SSH_PRIVATE_KEY')]) {
-			sh 'scp -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no docker-compose.yaml ${STAGE_SERVER}:/home/savirm/diamond/'
+			sh 'scp -i ${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no docker-compose.yaml ${STAGE_SERVER}:/home/savirm/diamond/'
                         sh 'ssh -i ${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no ${STAGE_SERVER}'
 			sh 'cd /home/savirm/diamond'
 			sh 'docker compose down'
