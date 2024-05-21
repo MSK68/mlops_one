@@ -3,10 +3,11 @@ pipeline {
 
     environment {
         DOCKER_IMAGE = 'diamond-predicting'
-	DOCKER_TAG = '1.0.0'
+	    DOCKER_TAG = '1.0.0'
         DOCKER_REGISTRY = 'msk68'
         SSH_CREDENTIALS_ID = 'stage-ssh-credentials-id'
         STAGE_SERVER = 'savirm@178.154.226.39'
+        DEPLOY_DIR = '/home/savirm/diamond'
     }
 
     stages {
@@ -52,8 +53,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo 'Testing...'
-
-		sh 'venv/bin/pytest --disable-warnings test_app.py'
+                sh 'venv/bin/pytest --disable-warnings test_app.py'
             }
         }
         stage('Data testing') {
@@ -62,41 +62,39 @@ pipeline {
                 sh 'venv/bin/pytest test_dataset.py'
             }
         }
-	stage('Docker Build') {
+	    stage('Docker Build') {
             steps {
                 echo 'Building Docker image...'           
-
                 // Сборка Docker-образа
                 sh 'docker build -t ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG} .'
             }
-	}
-	stage('Publish') {
-	    steps {
-		echo 'Publishing Docker-image in hub.docker.com...'
-		
-		// Docker login
+	    }
+	    stage('Publish') {
+	        steps {
+		        echo 'Publishing Docker-image in hub.docker.com...'
+		        // Docker login
                 withCredentials([string(credentialsId: 'dockerhub-credentials-id', variable: 'DOCKERHUB_PASSWORD')]) {
                     sh 'echo $DOCKERHUB_PASSWORD | docker login -u msk68 --password-stdin'
                 }
 		
-		// Отправка Docker-образа в Docker Hub
+		        // Отправка Docker-образа в Docker Hub
                 sh 'docker push ${DOCKER_REGISTRY}/${DOCKER_IMAGE}:${DOCKER_TAG}'
                 echo 'Docker image pushed to Docker Hub.'    
-	    }
+	        }
         }
         stage('Deploy') {
             steps {
                 echo 'Deploying...'
                 script {
-                    withCredentials([sshUserPrivateKey(credentialsId: SSH_CREDENTIALS_ID, keyFileVariable: 'SSH_PRIVATE_KEY')]) {
-			sh 'scp -i ${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no docker-compose.yaml ${STAGE_SERVER}:/home/savirm/diamond/'
-                        sh 'ssh -i ${SSH_PRIVATE_KEY} -o StrictHostKeyChecking=no ${STAGE_SERVER}'
-			sh 'cd /home/savirm/diamond'
-			sh 'docker compose down'
-			sh 'fuser -k 80/tcp || true'
-                        sh 'docker compose up -d'
+                    withCredentials([sshUserPrivateKey(credentialsId: SSH_CREDENTIALS_ID, keyFileVariable: 'SSH_KEY_PATH')]) {
+                        sh """
+                        scp -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no docker-compose.yml ${STAGE_SERVER}:${DEPLOY_DIR}/
+                        ssh -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no ${STAGE_SERVER} "docker-compose -f ${DEPLOY_DIR}/docker-compose.yml down"
+                        ssh -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no ${STAGE_SERVER} "fuser -k 80/tcp || true"
+                        ssh -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no ${STAGE_SERVER} "docker-compose -f ${DEPLOY_DIR}/docker-compose.yml up -d"
+                        """
                     }
-		}
+		        }
             }
         }
     }
