@@ -89,9 +89,9 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: SSH_CREDENTIALS_ID, keyFileVariable: 'SSH_KEY_PATH')]) {
                     sh """
                     scp -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no docker-compose.yaml ${STAGE_SERVER}:${DEPLOY_DIR}/
-                    ssh -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no ${STAGE_SERVER} "docker-compose -f ${DEPLOY_DIR}/docker-compose.yaml down"
+                    ssh -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no ${STAGE_SERVER} "docker compose -f ${DEPLOY_DIR}/docker-compose.yaml down"
                     ssh -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no ${STAGE_SERVER} "fuser -k 80/tcp || true"
-                    ssh -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no ${STAGE_SERVER} "docker-compose -f ${DEPLOY_DIR}/docker-compose.yaml up -d"
+                    ssh -i ${SSH_KEY_PATH} -o StrictHostKeyChecking=no ${STAGE_SERVER} "docker compose -f ${DEPLOY_DIR}/docker-compose.yaml up -d"
                     """
                     }
 		}
